@@ -66,6 +66,7 @@ class R3PComms(serial.Serial):
             pass
             # print(f'<<< {payload.hex()}')
         else:
+            # TODO: gracefully handle this
             raise RuntimeError("CRC check fail")
         return payload
 
