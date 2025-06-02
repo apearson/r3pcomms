@@ -1,4 +1,4 @@
-# r3p-comms
+# r3pcomms
 River 3 Plus comms from scratch via USB CDC (ACM)
 
 ## Usage
