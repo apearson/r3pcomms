@@ -1,0 +1,40 @@
+[build-system]
+requires = [
+    "hatchling >= 1.27",
+    "hatch-vcs",
+    ]
+build-backend = "hatchling.build"
+
+[project]
+name = "r3pcomms"
+description = "River 3 Plus comms from scratch via USB CDC (ACM)"
+dynamic = [
+    "version",
+    "urls",
+    ]
+readme = "README.md"
+license = "MIT"
+authors = [
+  { name="M. Greyson Christoforo", email="grey@christoforo.net" },
+]
+
+dependencies = [
+  "pyserial",
+]
+
+[project.scripts]
+r3pcomms-cli = "r3pcomms.__main__:entrypoint"
+
+[tool.hatch.metadata.hooks.vcs.urls]
+homepage = "https://github.com/greyltc/r3pcomms"
+source = "https://github.com/greyltc/r3pcomms.git"
+source_archive = "https://github.com/greyltc/r3pcomms/archive/{commit_hash}.zip"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/r3pcomms/_version.py"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.black]
+line-length = 999999
