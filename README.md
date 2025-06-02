@@ -23,3 +23,8 @@ REDACTED
 $ python3 -m r3pcomms --port /dev/ttyACM0 --serial
 REDACTED
 ```
+## Installation
+### From the Arch User Repository via paru
+```
+$ paru -Syu python-r3pcomms-git
+```
