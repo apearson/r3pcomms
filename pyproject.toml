@@ -36,5 +36,5 @@ version-file = "src/r3pcomms/_version.py"
 [tool.hatch.version]
 source = "vcs"
 
-[tool.black]
-line-length = 999999
+#[tool.black]
+#line-length = 999999

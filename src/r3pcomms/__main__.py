@@ -29,7 +29,8 @@ def main_parser() -> argparse.ArgumentParser:
         "--port",
         "-p",
         required=True,
-        help='comms port to use, like "COM3" or "/dev/ttyACM0" or ' '"/dev/serial/by-id/usb-EcoFlow_EF-UPS-RIVER_3_Plus_${SERIALNUMBER}-if01"',
+        help='comms port to use, like "COM3" or "/dev/ttyACM0" or '
+        '"/dev/serial/by-id/usb-EcoFlow_EF-UPS-RIVER_3_Plus_${SERIALNUMBER}-if01"',
     )
     parser.add_argument(
         "--serial",
