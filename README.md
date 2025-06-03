@@ -16,10 +16,12 @@ options:
   --metrics, -m         get all metrics
 ```
 ### Examples
+in Windows using com port:
 ```
 $ python3 -m r3pcomms --port COM3 --serial
 REDACTED
 ```
+in Linux using serial port:
 ```
 $ python3 -m r3pcomms --port /dev/ttyACM0 --serial
 REDACTED
