@@ -100,7 +100,7 @@ class R3PComms(serial.Serial):
             offset += 3 + seg_len
             if seg_type == 4:
                 seg_val = struct.unpack("<HH", seg_data)
-                name = "Capacity?"
+                name = "Capacity?/Battery Voltage?"
                 unit = "?"
             elif seg_type == 7:
                 seg_val = struct.unpack("f", seg_data)[0]
