@@ -11,12 +11,8 @@ class R3PComms(serial.Serial):
     River 3 Plus comms from scratch via USB CDC (ACM)
     """
 
-    base_len = 20
-    header_len = 4
-    header = 0x03AA
-    overhead_len = 14
-    sequence_num = 0
-    debug = False
+    sequence_num: int
+    debug_prints: bool
 
     def __init__(self, comport: str):
         self.sequence_num = 0
@@ -29,6 +25,8 @@ class R3PComms(serial.Serial):
         }
         super().__init__(**comms_args)
         self.port = comport
+        self.debug_prints = False
+        self.sequence_num = 0
 
     def __enter__(self):
         self.sequence_num = 0
@@ -55,11 +53,14 @@ class R3PComms(serial.Serial):
         return crc & 0xFFFF
 
     def tx(self, msg: str) -> int | None:
+        overhead_len = 14
+        start = 0x03AA
+        
         bmsg = bytes.fromhex(msg)
-        msg_len = len(bmsg) - self.overhead_len
+        msg_len = len(bmsg) - overhead_len
         bsequence = struct.pack("<I", self.sequence_num)
         bmsg_seq = bmsg[:2] + bsequence + bmsg[6:]
-        headmsg = struct.pack("<HH", self.header, msg_len) + bmsg_seq
+        headmsg = struct.pack("<HH", start, msg_len) + bmsg_seq
         crc_val = R3PComms.crc16(headmsg)
         out = headmsg + struct.pack("<H", crc_val)
         if self.debug:
@@ -69,13 +70,17 @@ class R3PComms(serial.Serial):
         return ret
 
     def rx(self):
-        header = self.read(self.header_len)
+        header_len = 4
+        base_len = 20
+        
+        header = self.read(header_len)
         preamble, var_len = struct.unpack("<HH", header)
-        payload = self.read(self.base_len + var_len - self.header_len - 2)
+        payload = self.read(base_len + var_len - header_len - 2)
         crc = self.read(2)
         if R3PComms.crc16(header + payload + crc) == 0:
             if self.debug:
-                print(f"<<< {payload.hex()}")
+                full_message = header + payload + crc
+                print(f"<<< {full_message.hex()}")
             else:
                 pass
         else:
