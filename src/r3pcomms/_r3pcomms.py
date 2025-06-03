@@ -3,7 +3,6 @@
 import serial
 import struct
 from operator import xor
-from collections.abc import Sequence
 
 
 class R3PComms(serial.Serial):
@@ -55,7 +54,7 @@ class R3PComms(serial.Serial):
     def tx(self, msg: str) -> int | None:
         overhead_len = 14
         start = 0x03AA
-        
+
         bmsg = bytes.fromhex(msg)
         msg_len = len(bmsg) - overhead_len
         bsequence = struct.pack("<I", self.sequence_num)
@@ -63,7 +62,7 @@ class R3PComms(serial.Serial):
         headmsg = struct.pack("<HH", start, msg_len) + bmsg_seq
         crc_val = R3PComms.crc16(headmsg)
         out = headmsg + struct.pack("<H", crc_val)
-        if self.debug:
+        if self.debug_prints:
             print(f">>> {out.hex()}")
         ret = self.write(out)
         self.sequence_num += 1
@@ -72,13 +71,13 @@ class R3PComms(serial.Serial):
     def rx(self):
         header_len = 4
         base_len = 20
-        
+
         header = self.read(header_len)
         preamble, var_len = struct.unpack("<HH", header)
         payload = self.read(base_len + var_len - header_len - 2)
         crc = self.read(2)
         if R3PComms.crc16(header + payload + crc) == 0:
-            if self.debug:
+            if self.debug_prints:
                 full_message = header + payload + crc
                 print(f"<<< {full_message.hex()}")
             else:
@@ -184,7 +183,7 @@ class R3PComms(serial.Serial):
     def get_metrics(self):
         serial_payload = self.query("de2d00000000ffff220201016602")
         decoded_payload = R3PComms.decode(serial_payload)
-        if self.debug:
+        if self.debug_prints:
             print(f"<d< {decoded_payload.hex()}")
             print(f"<?< {decoded_payload[:18].hex()}")
         metrics_result = self.segmenter(decoded_payload[18:])

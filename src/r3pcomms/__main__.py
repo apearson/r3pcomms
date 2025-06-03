@@ -51,8 +51,9 @@ def main_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--metrics",
         "-m",
-        action="store_true",
-        help="get all metrics",
+        default="0",
+        type=int,
+        help="number of times to get all metrics",
     )
 
     return parser
@@ -74,30 +75,7 @@ def main(cli_args: Sequence[str], prog: str | None = None) -> None:
     run_actions = []
     if args.serial:
         run_actions.append(({"fun": "get_serial", "args": (), "kwargs": {}}))
-    if args.metrics:
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
+    for i in range(args.metrics):
         run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
 
     run(args.port, run_actions)
