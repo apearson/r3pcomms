@@ -21,6 +21,7 @@ def run(port: str, actions: Sequence[dict]):
             if action["fun"] in ("get_serial", "get_metrics"):
                 print(result)
 
+
 def main_parser() -> argparse.ArgumentParser:
     """
     Construct the main parser.

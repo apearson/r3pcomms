@@ -145,18 +145,24 @@ class R3PComms(serial.Serial):
             elif seg_type == 22:
                 seg_val = struct.unpack(f"{seg_len}s", seg_data)[0].decode()
                 name = "serial"
-                unit= ""
+                unit = ""
             elif seg_type == 23:
                 seg_val = struct.unpack("<HH", seg_data)
-                seg_val = tuple([x/60 for x in seg_val])
+                seg_val = tuple([x / 60 for x in seg_val])
                 name = "Time left?"
                 unit = "Hr?"
             else:
                 seg_val = struct.unpack("f", seg_data)[0]
                 name = "unknown"
-                unit ="?"
+                unit = "?"
             result.append(
-                {"name": name, "type": seg_type, "data": "0x"+seg_data.hex(), "value": seg_val, "unit": unit}
+                {
+                    "name": name,
+                    "type": seg_type,
+                    "data": "0x" + seg_data.hex(),
+                    "value": seg_val,
+                    "unit": unit,
+                }
             )
         return result
 
@@ -177,5 +183,12 @@ class R3PComms(serial.Serial):
             print(f"<d< {decoded_payload.hex()}")
             print(f"<?< {decoded_payload[:18].hex()}")
         metrics_result = self.segmenter(decoded_payload[18:])
-        metrics_result.append({"name": "preamble", "data": decoded_payload[:18].hex(), "value": 0, "unit": ""})
+        metrics_result.append(
+            {
+                "name": "preamble",
+                "data": decoded_payload[:18].hex(),
+                "value": 0,
+                "unit": "",
+            }
+        )
         return metrics_result
