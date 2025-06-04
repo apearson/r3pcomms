@@ -9,7 +9,7 @@ import r3pcomms
 from r3pcomms import R3PComms
 
 
-def run(port: str, actions: Sequence[dict], debug:bool):
+def run(port: str, actions: Sequence[dict], debug: bool):
     inter_comms_delay_s = 1
 
     with R3PComms(port) as d:
