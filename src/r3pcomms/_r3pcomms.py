@@ -184,7 +184,6 @@ class R3PComms(serial.Serial):
         decoded_payload = R3PComms.decode(serial_payload)
         if self.debug_prints:
             print(f"<d< {decoded_payload.hex()}")
-            print(f"<?< {decoded_payload[:18].hex()}")
         metrics_result = self.segmenter(decoded_payload[18:])
         metrics_result.append(
             {
