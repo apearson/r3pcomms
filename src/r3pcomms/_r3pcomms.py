@@ -102,6 +102,10 @@ class R3PComms(serial.Serial):
             seg_type, seg_len = struct.unpack_from("<HB", source, offset=offset)
             seg_data = source[offset + 3 : offset + 3 + seg_len]
             offset += 3 + seg_len
+            if seg_type == 3:
+                seg_val = struct.unpack("<I", seg_data)[0]
+                name = "Design Capacity"
+                unit = "Ah"
             if seg_type == 4:
                 seg_val = struct.unpack("<HH", seg_data)
                 name = "Capacity?/Battery Voltage?"
