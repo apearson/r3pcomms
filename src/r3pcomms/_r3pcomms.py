@@ -68,7 +68,7 @@ class R3PComms(serial.Serial):
         self.sequence_num += 1
         return ret
 
-    def rx(self):
+    def rx(self) -> tuple[bytes, bytes]:
         header_len = 4
         base_len = 20
 
@@ -76,16 +76,16 @@ class R3PComms(serial.Serial):
         preamble, var_len = struct.unpack("<HH", header)
         payload = self.read(base_len + var_len - header_len - 2)
         crc = self.read(2)
-        if R3PComms.crc16(header + payload + crc) == 0:
+        full_message = header + payload + crc
+        if R3PComms.crc16(full_message) == 0:
             if self.debug_prints:
-                full_message = header + payload + crc
                 print(f"<<< {full_message.hex()}")
             else:
                 pass
         else:
             # TODO: gracefully handle this
             raise RuntimeError("CRC check fail")
-        return payload
+        return header, payload
 
     @staticmethod
     def decode(payload: bytes) -> bytes:
@@ -170,20 +170,20 @@ class R3PComms(serial.Serial):
             )
         return result
 
-    def query(self, msg: str):
+    def query(self, msg: str) -> tuple[bytes, bytes]:
         self.tx(msg)
         return self.rx()
 
     def get_serial(self):
-        serial_payload = self.query("f40d00000000ffff2202010166031600")
-        serial_result = self.segmenter(serial_payload[15:])
+        header, payload = self.query("f40d00000000ffff2202010166031600")
+        serial_result = self.segmenter(payload[15:])
         return serial_result[0]["value"]
 
     def get_metrics(self):
-        serial_payload = self.query("de2d00000000ffff220201016602")
-        decoded_payload = R3PComms.decode(serial_payload)
+        header, payload = self.query("de2d00000000ffff220201016602")
+        decoded_payload = R3PComms.decode(payload)
         if self.debug_prints:
-            print(f"<d< {decoded_payload.hex()}")
+            print(f"<d< {header.hex() + decoded_payload.hex()}")
         metrics_result = self.segmenter(decoded_payload[18:])
         metrics_result.append(
             {
