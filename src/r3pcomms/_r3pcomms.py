@@ -176,7 +176,6 @@ class R3PComms(serial.Serial):
 
     def get_serial(self):
         serial_payload = self.query("f40d00000000ffff2202010166031600")
-        # rheader, serial = struct.unpack("18s16s", serial_payload)
         serial_result = self.segmenter(serial_payload[15:])
         return serial_result[0]["value"]
 

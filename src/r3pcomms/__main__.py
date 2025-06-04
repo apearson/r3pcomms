@@ -9,10 +9,11 @@ import r3pcomms
 from r3pcomms import R3PComms
 
 
-def run(port: str, actions: Sequence[dict]):
+def run(port: str, actions: Sequence[dict], debug:bool):
     inter_comms_delay_s = 1
 
     with R3PComms(port) as d:
+        d.debug_prints = debug
         for i, action in enumerate(actions):
             if i != 0:
                 time.sleep(inter_comms_delay_s)
@@ -41,6 +42,12 @@ def main_parser() -> argparse.ArgumentParser:
         required=True,
         help='comms port to use, like "COM3" or "/dev/ttyACM0" or '
         '"/dev/serial/by-id/usb-EcoFlow_EF-UPS-RIVER_3_Plus_${SERIALNUMBER}-if01"',
+    )
+    parser.add_argument(
+        "--debug",
+        "-d",
+        action="store_true",
+        help="print raw comms messages",
     )
     parser.add_argument(
         "--serial",
@@ -78,7 +85,7 @@ def main(cli_args: Sequence[str], prog: str | None = None) -> None:
     for i in range(args.metrics):
         run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
 
-    run(args.port, run_actions)
+    run(args.port, run_actions, args.debug)
 
 
 def entrypoint() -> None:
