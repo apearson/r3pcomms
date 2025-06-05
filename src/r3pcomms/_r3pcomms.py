@@ -12,6 +12,10 @@ class R3PComms(serial.Serial):
 
     sequence_num: int
     debug_prints: bool
+    redact_sn: bool
+    serial_number: bytes
+    held_xdbg: bytes
+    held_dbg: bytes
 
     def __init__(self, comport: str):
         self.sequence_num = 0
@@ -26,6 +30,10 @@ class R3PComms(serial.Serial):
         self.port = comport
         self.debug_prints = False
         self.sequence_num = 0
+        self.serial_number = b""
+        self.redact_sn = True
+        self.held_xdbg = b""
+        self.held_dbg = b""
 
     def __enter__(self):
         self.sequence_num = 0
@@ -68,7 +76,7 @@ class R3PComms(serial.Serial):
         self.sequence_num += 1
         return ret
 
-    def rx(self) -> tuple[bytes, bytes]:
+    def rx(self) -> bytes:
         header_len = 4
         base_len = 20
 
@@ -79,20 +87,30 @@ class R3PComms(serial.Serial):
         full_message = header + payload + crc
         if R3PComms.crc16(full_message) == 0:
             if self.debug_prints:
-                print(f"<<< {full_message.hex()}")
-            else:
-                pass
+                self.debug_print(full_message)
         else:
             # TODO: gracefully handle this
             raise RuntimeError("CRC check fail")
-        return header, payload
+        return header + payload
 
     @staticmethod
-    def decode(payload: bytes) -> bytes:
-        not_obfuscated = payload[:14]
-        (sequence_num,) = struct.unpack("<I", not_obfuscated[2:6])
-        deobfuscated = bytes([xor(x, sequence_num) & 0xFF for x in payload[14:]])
+    def xorit(data: bytes, sequence_num: int | None = None) -> bytes:
+        obfuscattion_offset = 18
+        if isinstance(sequence_num, int):
+            not_obfuscated = bytes([])
+            obfuscated = data
+        else:
+            not_obfuscated = data[:obfuscattion_offset]
+            obfuscated = data[obfuscattion_offset:]
+            sequence_num = R3PComms.get_sequencenum(not_obfuscated)
+
+        deobfuscated = bytes([xor(x, sequence_num) & 0xFF for x in obfuscated])
         return not_obfuscated + deobfuscated
+
+    @staticmethod
+    def get_sequencenum(data: bytes) -> int:
+        offset = 6
+        return struct.unpack("<I", data[offset : offset + 4])[0]
 
     def segmenter(self, source: bytes) -> list[dict]:
         offset = 0
@@ -106,7 +124,7 @@ class R3PComms(serial.Serial):
                 seg_val = struct.unpack("<I", seg_data)[0]
                 name = "Design Capacity"
                 unit = "Ah"
-            if seg_type == 4:
+            elif seg_type == 4:
                 seg_val = struct.unpack("<HH", seg_data)
                 name = "Capacity?/Battery Voltage?"
                 unit = "?"
@@ -151,7 +169,20 @@ class R3PComms(serial.Serial):
                 name = "USB-C Load"
                 unit = "W"
             elif seg_type == 22:
-                seg_val = struct.unpack(f"{seg_len}s", seg_data)[0].decode()
+                seg_val = struct.unpack(f"{seg_len}s", seg_data)[0]
+                self.serial_number = seg_val
+                if self.debug_print:
+                    if self.held_dbg:
+                        self.debug_print(self.held_dbg)
+                        self.held_dbg = b""
+                    if self.held_xdbg:
+                        self.debug_print(self.held_dbg, xord=True)
+                        self.held_xdbg = b""
+                if self.redact_sn:
+                    seg_val = "REDACTED"
+                    seg_data = bytes.fromhex("ff") * len(self.serial_number)
+                else:
+                    seg_val = seg_val.decode()
                 name = "serial"
                 unit = ""
             elif seg_type == 23:
@@ -174,27 +205,53 @@ class R3PComms(serial.Serial):
             )
         return result
 
-    def query(self, msg: str) -> tuple[bytes, bytes]:
+    def query(self, msg: str) -> bytes:
         self.tx(msg)
         return self.rx()
 
     def get_serial(self):
-        header, payload = self.query("f40d00000000ffff2202010166031600")
-        serial_result = self.segmenter(payload[15:])
+        serial_answer_offset = 19
+        answer = self.query("f40d00000000ffff2202010166031600")
+        serial_result = self.segmenter(answer[serial_answer_offset:])
         return serial_result[0]["value"]
 
     def get_metrics(self):
-        header, payload = self.query("de2d00000000ffff220201016602")
-        decoded_payload = R3PComms.decode(payload)
+        metrics_answer_offset = 22
+        answer = self.query("de2d00000000ffff220201016602")
+        xanswer = R3PComms.xorit(answer)
         if self.debug_prints:
-            print(f"<d< {header.hex() + decoded_payload.hex()}")
-        metrics_result = self.segmenter(decoded_payload[18:])
+            self.debug_print(xanswer, xord=True)
+        metrics_result = self.segmenter(xanswer[metrics_answer_offset:])
         metrics_result.append(
             {
                 "name": "preamble",
-                "data": decoded_payload[:18].hex(),
+                "data": xanswer[:metrics_answer_offset].hex(),
                 "value": 0,
                 "unit": "",
             }
         )
         return metrics_result
+
+    def debug_print(self, data: bytes, xord: bool = False):
+        if xord:
+            prompt = "<x< "
+        else:
+            prompt = "<<< "
+
+        if self.redact_sn:
+            if self.serial_number:
+                if xord:
+                    to_redact = self.serial_number
+                else:
+                    seq = R3PComms.get_sequencenum(data)
+                    to_redact = R3PComms.xorit(self.serial_number, seq)
+                data = data.replace(to_redact, bytes.fromhex("ff") * len(to_redact))
+
+                print(prompt + data.hex())
+            else:
+                if xord:
+                    self.held_xdbg = data
+                else:
+                    self.held_dbg = data
+        else:
+            print(prompt + data.hex())

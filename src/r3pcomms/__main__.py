@@ -9,11 +9,12 @@ import r3pcomms
 from r3pcomms import R3PComms
 
 
-def run(port: str, actions: Sequence[dict], debug: bool):
+def run(port: str, actions: list[dict], debug: bool, hide_sn: bool):
     inter_comms_delay_s = 1
 
     with R3PComms(port) as d:
         d.debug_prints = debug
+        d.redact_sn = hide_sn
         for i, action in enumerate(actions):
             if i != 0:
                 time.sleep(inter_comms_delay_s)
@@ -24,10 +25,6 @@ def run(port: str, actions: Sequence[dict], debug: bool):
 
 
 def main_parser() -> argparse.ArgumentParser:
-    """
-    Construct the main parser.
-    """
-
     description = "Local communication with River 3 Plus"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
@@ -56,6 +53,12 @@ def main_parser() -> argparse.ArgumentParser:
         help="get unit serial number",
     )
     parser.add_argument(
+        "--redact-serial",
+        "-r",
+        action="store_true",
+        help="redact serial number from all prints",
+    )
+    parser.add_argument(
         "--metrics",
         "-m",
         default="0",
@@ -67,13 +70,6 @@ def main_parser() -> argparse.ArgumentParser:
 
 
 def main(cli_args: Sequence[str], prog: str | None = None) -> None:
-    """
-    Parse the CLI arguments then do comms actions.
-
-    :param cli_args: CLI arguments
-    :param prog: Program name to show in help text
-    """
-
     parser = main_parser()
     if prog:
         parser.prog = prog
@@ -85,7 +81,13 @@ def main(cli_args: Sequence[str], prog: str | None = None) -> None:
     for i in range(args.metrics):
         run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
 
-    run(args.port, run_actions, args.debug)
+    run_args = {
+        "port": args.port,
+        "actions": run_actions,
+        "debug": args.debug,
+        "hide_sn": args.redact_serial,
+    }
+    run(**run_args)
 
 
 def entrypoint() -> None:
