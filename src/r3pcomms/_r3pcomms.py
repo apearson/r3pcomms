@@ -62,8 +62,7 @@ class R3PComms:
         self.held_dbg = b""
 
     def __enter__(self):
-        self.detach_usb_drivers()  # detaches all device interfaces
-        self.reattach_usb_drivers()  # reattches everything except the HID interface
+        self.detach_usb_drivers()
 
         if self.s:
             self.sequence_num = 0
@@ -92,7 +91,7 @@ class R3PComms:
                 if self.u.is_kernel_driver_active(intf.bInterfaceNumber):
                     if self.debug_prints >= 2:
                         print(f"Detaching INTERFACE {intf.bInterfaceNumber}")
-                    if intf.bInterfaceClass == 0x3 or True:  # HID
+                    if intf.bInterfaceClass == 0x3:  # HID
                         if self.debug_prints >= 2:
                             print(f"Detaching INTERFACE {intf.bInterfaceNumber}")
                         self.u.detach_kernel_driver(intf.bInterfaceNumber)
