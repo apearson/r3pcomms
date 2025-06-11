@@ -1,6 +1,8 @@
 # r3pcomms
 Local communication with a River 3 Plus over USB HID and/or CDC(ACM)
 
+![usage](doc/usage.gif)
+
 ## Usage
 ```
 $ python -m r3pcomms --help
