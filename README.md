@@ -107,5 +107,5 @@ https://aur.archlinux.org/packages/python-r3pcomms-git
 $ paru -Syu python-r3pcomms-git
 ```
 ## An untested system shutdown script
-Call it periodically with cron or something, or call it once with a "forever" argument and let it run forever.
+Call it periodically with cron or something, or call it once with a "forever" argument and let it run forever.  
 [ups-poweroff.sh](scripts/ups-poweroff.sh)
