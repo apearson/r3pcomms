@@ -1,6 +1,7 @@
 import sys
 import argparse
 import time
+import json
 
 from collections.abc import Sequence
 
@@ -9,23 +10,50 @@ import r3pcomms
 from r3pcomms import R3PComms
 
 
-def run(port: str, actions: list[dict], debug: bool, hide_sn: bool):
-    inter_comms_delay_s = 1
+def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, inf, h):
+    inter_comms_delay_s = p
 
-    with R3PComms(port) as d:
-        d.debug_prints = debug
+    with R3PComms(com, usb, dbg) as d:
         d.redact_sn = hide_sn
-        for i, action in enumerate(actions):
-            if i != 0:
+        do_sleep = False
+        t0 = time.time()
+        count = 0
+        while actions:
+            count += 1
+            action = actions.pop()
+            if do_sleep:
                 time.sleep(inter_comms_delay_s)
+            else:
+                do_sleep = True
             result = getattr(d, action["fun"])(*action["args"], **action["kwargs"])
+            t = time.time() - t0
 
-            if action["fun"] in ("get_serial", "get_metrics"):
-                print(result)
+            if not d.debug_prints:
+                result = {
+                    k: v
+                    for (k, v) in result.items()
+                    if "unknown" not in k and "?" not in k
+                }
+
+            if h:
+                if len(actions) != 0 or inf:
+                    print(chr(27) + "[2J")
+                result = {"Timestamp": {"value": t, "unit": "s"}} | result
+                result = {"Iteration": {"value": count, "unit": ""}} | result
+                for key, val in result.items():
+                    value = val["value"]
+                    if isinstance(value, float):
+                        print(f'{key}:\t{abs(value):.1f}{val["unit"]}')
+                    else:
+                        print(f'{key}:\t{value}{val["unit"]}')
+            else:
+                print(json.dumps(result))
+            if inf and action["fun"] == "get":
+                actions.append(action)
 
 
 def main_parser() -> argparse.ArgumentParser:
-    description = "Local communication with River 3 Plus"
+    description = "Local communication to a River 3 Plus over USB HID and/or CDC(ACM)"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "--version",
@@ -34,23 +62,17 @@ def main_parser() -> argparse.ArgumentParser:
         version=f'r3pcomms {r3pcomms.__version__} ({",".join(r3pcomms.__path__)})',
     )
     parser.add_argument(
-        "--port",
-        "-p",
-        required=True,
-        help='comms port to use, like "COM3" or "/dev/ttyACM0" or '
-        '"/dev/serial/by-id/usb-EcoFlow_EF-UPS-RIVER_3_Plus_${SERIALNUMBER}-if01"',
-    )
-    parser.add_argument(
         "--debug",
         "-d",
-        action="store_true",
+        action="count",
+        default=0,
         help="print raw comms messages",
     )
     parser.add_argument(
-        "--serial",
-        "-s",
+        "--identify",
+        "-i",
         action="store_true",
-        help="get unit serial number",
+        help="get unit's serial number (must specify --serial)",
     )
     parser.add_argument(
         "--redact-serial",
@@ -59,11 +81,38 @@ def main_parser() -> argparse.ArgumentParser:
         help="redact serial number from all prints",
     )
     parser.add_argument(
-        "--metrics",
-        "-m",
-        default="0",
+        "--serial",
+        "-s",
+        help="poll for data via serial comms using this port; eg. "
+        '"COM3" or "/dev/ttyACM0" or '
+        '"/dev/serial/by-id/usb-EcoFlow_EF-UPS-RIVER_3_Plus_${SERIALNUMBER}-if01"',
+    )
+    parser.add_argument(
+        "--hid",
+        nargs="?",
+        const="3746:ffff",
+        default="",
+        help="poll for data via HID comms. "
+        "optinally specify a VENDOR_ID:PRODUCT_ID to use instead of 3746:ffff",
+    )
+    parser.add_argument(
+        "--number",
+        "-n",
+        default=argparse.SUPPRESS,
         type=int,
-        help="number of times to get all metrics",
+        help="poll for data this many times (0 means forever)",
+    )
+    parser.add_argument(
+        "--every",
+        "-e",
+        default=1.0,
+        type=float,
+        help="data poll period in seconds",
+    )
+    parser.add_argument(
+        "--humanize",
+        action="store_true",
+        help="output formatted for humans, otherwise json for the robots",
     )
 
     return parser
@@ -75,17 +124,34 @@ def main(cli_args: Sequence[str], prog: str | None = None) -> None:
         parser.prog = prog
     args = parser.parse_args(cli_args)
 
+    if args.identify:
+        if not args.serial:
+            parser.error("--identify requires --serial.")
+        if "number" not in args:
+            args.number = -1
+    if "number" not in args:
+        args.number = 1
+    if args.number == 0:
+        forever = True
+        args.number = 1
+    else:
+        forever = False
+
     run_actions = []
-    if args.serial:
+    if args.identify:
         run_actions.append(({"fun": "get_serial", "args": (), "kwargs": {}}))
-    for i in range(args.metrics):
-        run_actions.append(({"fun": "get_metrics", "args": (), "kwargs": {}}))
+    for i in range(args.number):
+        run_actions.append(({"fun": "get", "args": (), "kwargs": {}}))
 
     run_args = {
-        "port": args.port,
+        "com": args.serial,
+        "usb": args.hid,
         "actions": run_actions,
-        "debug": args.debug,
+        "dbg": args.debug,
         "hide_sn": args.redact_serial,
+        "p": args.every,
+        "inf": forever,
+        "h": args.humanize,
     }
     run(**run_args)
 
