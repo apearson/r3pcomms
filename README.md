@@ -1,5 +1,5 @@
 # r3pcomms
-River 3 Plus comms from scratch via USB CDC (ACM)
+Local communication with a River 3 Plus over USB HID and/or CDC(ACM)
 
 ## Usage
 ```
@@ -8,7 +8,7 @@ usage: python -m r3pcomms [-h] [--version] [--debug] [--identify]
                           [--redact-serial] [--serial SERIAL] [--hid [HID]]
                           [--number NUMBER] [--every EVERY] [--humanize]
 
-Local communication to a River 3 Plus over USB HID and/or CDC(ACM)
+Local communication with a River 3 Plus over USB HID and/or CDC(ACM)
 
 options:
   -h, --help            show this help message and exit
@@ -29,7 +29,7 @@ options:
   --humanize            output formatted for humans, otherwise json for the
                         robots
 ```
-For USB device permissions issues. See, https://github.com/pyusb/pyusb/blob/master/docs/faq.rst#how-to-practically-deal-with-permission-issues-on-linux
+For USB device permissions issues, see: https://github.com/pyusb/pyusb/blob/master/docs/faq.rst#how-to-practically-deal-with-permission-issues-on-linux
 ### Examples
 In linux, using serial + HID comms, output formatted for humans:
 ```
