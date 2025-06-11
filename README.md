@@ -107,13 +107,14 @@ https://aur.archlinux.org/packages/python-r3pcomms-git
 $ paru -Syu python-r3pcomms-git
 ```
 ## An untested system shutdown script
+This script is meant to monitor the power bank's state of charge and power off the computer when the charge level drops below 10%  
 [ups-poweroff.sh](scripts/ups-poweroff.sh)  
 
 Call it once with a `forever` argument and let it periodically check the state of charge like:
 ```
 ./ups-poweroff.sh forever
 ```  
-or schedule calls yourself by adding a line like this to your crontab:
+or you could schedule calls yourself every minute by adding a line like this to your crontab:
 ```
 * * * * * /usr/bin/ups-poweroff.sh
 ```
