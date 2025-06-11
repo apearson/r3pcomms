@@ -31,7 +31,8 @@ options:
   --humanize            output formatted for humans, otherwise json for the
                         robots
 ```
-For USB device permissions issues, see: https://github.com/pyusb/pyusb/blob/master/docs/faq.rst#how-to-practically-deal-with-permission-issues-on-linux
+For USB device permissions issues, see: https://github.com/pyusb/pyusb/blob/master/docs/faq.rst#how-to-practically-deal-with-permission-issues-on-linux  
+My River 3 Plus has a USB `vendorID:productID` of `3746:ffff`
 ### Examples
 In linux, using serial + HID comms, output formatted for humans:
 ```
