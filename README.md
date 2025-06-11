@@ -106,6 +106,7 @@ https://aur.archlinux.org/packages/python-r3pcomms-git
 ```
 $ paru -Syu python-r3pcomms-git
 ```
+Using this package should take care of any possible permissions issues if you add your user to the `efusb` and `uucp` groups, then reboot.
 ## An untested system shutdown script
 This script is meant to monitor the power bank's state of charge and power off the computer when the charge level drops below 10%  
 [ups-poweroff.sh](scripts/ups-poweroff.sh)  
