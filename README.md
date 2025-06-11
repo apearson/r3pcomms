@@ -113,7 +113,7 @@ This script is meant to monitor the power bank's state of charge and power off t
 
 Call it once with a `forever` argument and let it periodically check the state of charge like:
 ```
-./ups-poweroff.sh forever
+$ ./ups-poweroff.sh forever
 ```  
 or you could schedule calls yourself every minute by adding a line like this to your crontab:
 ```
