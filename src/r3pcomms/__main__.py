@@ -53,7 +53,7 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
 
 
 def main_parser() -> argparse.ArgumentParser:
-    description = "Local communication to a River 3 Plus over USB HID and/or CDC(ACM)"
+    description = "Local communication with a River 3 Plus over USB HID and/or CDC(ACM)"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "--version",
