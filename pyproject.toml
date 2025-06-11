@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "r3pcomms"
-description = "River 3 Plus comms from scratch via USB HID and/or CDC(ACM)"
+description = "Local communication with a River 3 Plus over USB HID and/or CDC(ACM)"
 dynamic = [
     "version",
     "urls",
