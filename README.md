@@ -101,6 +101,7 @@ $ python -m r3pcomms --serial /dev/ttyACM0 --hid --number 3 --redact-serial --de
 ```
 ## Installation
 ### From the Arch User Repository via paru
+https://aur.archlinux.org/packages/python-r3pcomms-git
 ```
 $ paru -Syu python-r3pcomms-git
 ```
