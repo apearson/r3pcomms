@@ -105,6 +105,7 @@ $ python -m r3pcomms --serial /dev/ttyACM0 --hid --number 3 --redact-serial --de
 $ paru -Syu python-r3pcomms-git
 ```
 ## An untested system shutdown script
+Call it periodically with cron or something, or call it once with a "forever" argument and let it run forever.
 ```bash
 #!/bin/sh
 
