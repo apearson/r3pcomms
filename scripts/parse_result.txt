@@ -1,0 +1,177 @@
+Parsed HID Report Descriptor successfully!
+0x05, 0x84,                    // Usage Page (Power Device)           0
+0x09, 0x04,                    // Usage (Vendor Usage 0x04)           2
+0xa1, 0x01,                    // Collection (Application)            4
+0x05, 0x84,                    //  Usage Page (Power Device)          6
+0x09, 0x1e,                    //  Usage (Vendor Usage 0x1e)          8
+0xa1, 0x84,                    //  Collection (Vendor_defined 0x84)   10
+0x09, 0x44,                    //   Usage (Vendor Usage 0x44)         12
+0x85, 0x01,                    //   Report ID (1)                     14
+0x75, 0x10,                    //   Report Size (16)                  16
+0x95, 0x01,                    //   Report Count (1)                  18
+0x27, 0xff, 0xff, 0x00, 0x00,  //   Logical Maximum (65535)           20
+0x66, 0x21, 0xd1,              //   Unit (SILinear: cm² * g * s⁻³)    25
+0x55, 0x07,                    //   Unit Exponent (7)                 28
+0xb1, 0x83,                    //   Feature (Cnst,Var,Abs,Vol)        30
+0xc0,                          //  End Collection                     32
+0x09, 0x24,                    //  Usage (Vendor Usage 0x24)          33
+0xa1, 0x02,                    //  Collection (Logical)               35
+0x75, 0x08,                    //   Report Size (8)                   37
+0x95, 0x01,                    //   Report Count (1)                  39
+0x15, 0x00,                    //   Logical Minimum (0)               41
+0x26, 0xff, 0x00,              //   Logical Maximum (255)             43
+0x05, 0x85,                    //   Usage Page (Battery System)       46
+0x85, 0x06,                    //   Report ID (6)                     48
+0x09, 0x8b,                    //   Usage (Vendor Usage 0x8b)         50
+0xb1, 0x23,                    //   Feature (Cnst,Var,Abs,NoPref)     52
+0x85, 0x1f,                    //   Report ID (31)                    54
+0x09, 0x89,                    //   Usage (Vendor Usage 0x89)         56
+0x79, 0x04,                    //   String Index                      58
+0xb1, 0x23,                    //   Feature (Cnst,Var,Abs,NoPref)     60
+0x85, 0x20,                    //   Report ID (32)                    62
+0x09, 0x8f,                    //   Usage (Vendor Usage 0x8f)         64
+0x79, 0x05,                    //   String Index                      66
+0xb1, 0x23,                    //   Feature (Cnst,Var,Abs,NoPref)     68
+0x85, 0x16,                    //   Report ID (22)                    70
+0x09, 0x2c,                    //   Usage (Vendor Usage 0x2c)         72
+0xb1, 0x23,                    //   Feature (Cnst,Var,Abs,NoPref)     74
+0x85, 0x10,                    //   Report ID (16)                    76
+0x09, 0x8d,                    //   Usage (Vendor Usage 0x8d)         78
+0x26, 0x64, 0x00,              //   Logical Maximum (100)             80
+0xb1, 0x22,                    //   Feature (Data,Var,Abs,NoPref)     83
+0x85, 0x18,                    //   Report ID (24)                    85
+0x09, 0x8e,                    //   Usage (Vendor Usage 0x8e)         87
+0xb1, 0x23,                    //   Feature (Cnst,Var,Abs,NoPref)     89
+0x85, 0x0e,                    //   Report ID (14)                    91
+0x09, 0x67,                    //   Usage (Vendor Usage 0x67)         93
+0xb1, 0x83,                    //   Feature (Cnst,Var,Abs,Vol)        95
+0x85, 0x17,                    //   Report ID (23)                    97
+0x09, 0x83,                    //   Usage (Vendor Usage 0x83)         99
+0xb1, 0x83,                    //   Feature (Cnst,Var,Abs,Vol)        101
+0x85, 0x0c,                    //   Report ID (12)                    103
+0x09, 0x66,                    //   Usage (Vendor Usage 0x66)         105
+0x81, 0xa3,                    //   Input (Cnst,Var,Abs,NoPref,Vol)   107
+0x09, 0x66,                    //   Usage (Vendor Usage 0x66)         109
+0xb1, 0xa3,                    //   Feature (Cnst,Var,Abs,NoPref,Vol) 111
+0x85, 0x0f,                    //   Report ID (15)                    113
+0x09, 0x8c,                    //   Usage (Vendor Usage 0x8c)         115
+0xb1, 0xa2,                    //   Feature (Data,Var,Abs,NoPref,Vol) 117
+0x85, 0x11,                    //   Report ID (17)                    119
+0x09, 0x29,                    //   Usage (Vendor Usage 0x29)         121
+0xb1, 0xa2,                    //   Feature (Data,Var,Abs,NoPref,Vol) 123
+0x85, 0x09,                    //   Report ID (9)                     125
+0x09, 0x85,                    //   Usage (Vendor Usage 0x85)         127
+0x75, 0x10,                    //   Report Size (16)                  129
+0x27, 0xff, 0xff, 0x00, 0x00,  //   Logical Maximum (65535)           131
+0xb1, 0xa3,                    //   Feature (Cnst,Var,Abs,NoPref,Vol) 136
+0x85, 0x1a,                    //   Report ID (26)                    138
+0x09, 0x6a,                    //   Usage (Vendor Usage 0x6a)         140
+0x27, 0xff, 0xff, 0x00, 0x00,  //   Logical Maximum (65535)           142
+0x66, 0x01, 0x10,              //   Unit (SILinear: s)                147
+0x55, 0x00,                    //   Unit Exponent (0)                 150
+0xb1, 0xa3,                    //   Feature (Cnst,Var,Abs,NoPref,Vol) 152
+0x85, 0x1c,                    //   Report ID (28)                    154
+0x09, 0x69,                    //   Usage (Vendor Usage 0x69)         156
+0x81, 0xa3,                    //   Input (Cnst,Var,Abs,NoPref,Vol)   158
+0x09, 0x69,                    //   Usage (Vendor Usage 0x69)         160
+0xb1, 0xa3,                    //   Feature (Cnst,Var,Abs,NoPref,Vol) 162
+0x85, 0x0d,                    //   Report ID (13)                    164
+0x09, 0x68,                    //   Usage (Vendor Usage 0x68)         166
+0x81, 0xa3,                    //   Input (Cnst,Var,Abs,NoPref,Vol)   168
+0x09, 0x68,                    //   Usage (Vendor Usage 0x68)         170
+0xb1, 0xa3,                    //   Feature (Cnst,Var,Abs,NoPref,Vol) 172
+0x85, 0x08,                    //   Report ID (8)                     174
+0x09, 0x2a,                    //   Usage (Vendor Usage 0x2a)         176
+0x75, 0x10,                    //   Report Size (16)                  178
+0x27, 0x64, 0x05, 0x00, 0x00,  //   Logical Maximum (1380)            180
+0x16, 0x78, 0x00,              //   Logical Minimum (120)             185
+0x81, 0x22,                    //   Input (Data,Var,Abs,NoPref)       188
+0x09, 0x2a,                    //   Usage (Vendor Usage 0x2a)         190
+0xb1, 0xa2,                    //   Feature (Data,Var,Abs,NoPref,Vol) 192
+0x05, 0x84,                    //   Usage Page (Power Device)         194
+0x85, 0x12,                    //   Report ID (18)                    196
+0x09, 0x57,                    //   Usage (Vendor Usage 0x57)         198
+0x16, 0x00, 0x80,              //   Logical Minimum (-32768)          200
+0x27, 0xff, 0x7f, 0x00, 0x00,  //   Logical Maximum (32767)           203
+0xb1, 0xa2,                    //   Feature (Data,Var,Abs,NoPref,Vol) 208
+0x85, 0x13,                    //   Report ID (19)                    210
+0x09, 0x55,                    //   Usage (Vendor Usage 0x55)         212
+0xb1, 0xa2,                    //   Feature (Data,Var,Abs,NoPref,Vol) 214
+0x85, 0x0a,                    //   Report ID (10)                    216
+0x09, 0x40,                    //   Usage (Vendor Usage 0x40)         218
+0x15, 0x00,                    //   Logical Minimum (0)               220
+0x27, 0xff, 0xff, 0x00, 0x00,  //   Logical Maximum (65535)           222
+0x67, 0x21, 0xd1, 0xf0, 0x00,  //   Unit (SILinear: cm² * g * s⁻³ * A⁻¹) 227
+0x55, 0x05,                    //   Unit Exponent (5)                 232
+0xb1, 0x23,                    //   Feature (Cnst,Var,Abs,NoPref)     234
+0x85, 0x0b,                    //   Report ID (11)                    236
+0x09, 0x30,                    //   Usage (Vendor Usage 0x30)         238
+0x81, 0xa3,                    //   Input (Cnst,Var,Abs,NoPref,Vol)   240
+0x09, 0x30,                    //   Usage (Vendor Usage 0x30)         242
+0xb1, 0xa3,                    //   Feature (Cnst,Var,Abs,NoPref,Vol) 244
+0x85, 0x14,                    //   Report ID (20)                    246
+0x09, 0x5a,                    //   Usage (Vendor Usage 0x5a)         248
+0x75, 0x08,                    //   Report Size (8)                   250
+0x15, 0x01,                    //   Logical Minimum (1)               252
+0x25, 0x03,                    //   Logical Maximum (3)               254
+0x65, 0x00,                    //   Unit (None)                       256
+0x55, 0x00,                    //   Unit Exponent (0)                 258
+0x81, 0x22,                    //   Input (Data,Var,Abs,NoPref)       260
+0x09, 0x5a,                    //   Usage (Vendor Usage 0x5a)         262
+0xb1, 0xa2,                    //   Feature (Data,Var,Abs,NoPref,Vol) 264
+0x09, 0x02,                    //   Usage (Vendor Usage 0x02)         266
+0xa1, 0x02,                    //   Collection (Logical)              268
+0x85, 0x07,                    //    Report ID (7)                    270
+0x05, 0x85,                    //    Usage Page (Battery System)      272
+0x09, 0x44,                    //    Usage (Vendor Usage 0x44)        274
+0x75, 0x01,                    //    Report Size (1)                  276
+0x15, 0x00,                    //    Logical Minimum (0)              278
+0x25, 0x01,                    //    Logical Maximum (1)              280
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  282
+0x09, 0x44,                    //    Usage (Vendor Usage 0x44)        284
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 286
+0x09, 0x45,                    //    Usage (Vendor Usage 0x45)        288
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  290
+0x09, 0x45,                    //    Usage (Vendor Usage 0x45)        292
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 294
+0x09, 0xd0,                    //    Usage (Vendor Usage 0xd0)        296
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  298
+0x09, 0xd0,                    //    Usage (Vendor Usage 0xd0)        300
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 302
+0x09, 0xd1,                    //    Usage (Vendor Usage 0xd1)        304
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  306
+0x09, 0xd1,                    //    Usage (Vendor Usage 0xd1)        308
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 310
+0x09, 0x42,                    //    Usage (Vendor Usage 0x42)        312
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  314
+0x09, 0x42,                    //    Usage (Vendor Usage 0x42)        316
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 318
+0x09, 0x43,                    //    Usage (Vendor Usage 0x43)        320
+0x81, 0xa2,                    //    Input (Data,Var,Abs,NoPref,Vol)  322
+0x09, 0x43,                    //    Usage (Vendor Usage 0x43)        324
+0xb1, 0xa2,                    //    Feature (Data,Var,Abs,NoPref,Vol) 326
+0x09, 0x4b,                    //    Usage (Vendor Usage 0x4b)        328
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  330
+0x09, 0x4b,                    //    Usage (Vendor Usage 0x4b)        332
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 334
+0x09, 0xdb,                    //    Usage (Vendor Usage 0xdb)        336
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  338
+0x09, 0xdb,                    //    Usage (Vendor Usage 0xdb)        340
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 342
+0x09, 0x46,                    //    Usage (Vendor Usage 0x46)        344
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  346
+0x09, 0x46,                    //    Usage (Vendor Usage 0x46)        348
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 350
+0x09, 0x47,                    //    Usage (Vendor Usage 0x47)        352
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  354
+0x09, 0x47,                    //    Usage (Vendor Usage 0x47)        356
+0xb1, 0xa3,                    //    Feature (Cnst,Var,Abs,NoPref,Vol) 358
+0x05, 0x84,                    //    Usage Page (Power Device)        360
+0x09, 0x68,                    //    Usage (Vendor Usage 0x68)        362
+0x81, 0xa2,                    //    Input (Data,Var,Abs,NoPref,Vol)  364
+0x09, 0x68,                    //    Usage (Vendor Usage 0x68)        366
+0xb1, 0xa2,                    //    Feature (Data,Var,Abs,NoPref,Vol) 368
+0x09, 0x69,                    //    Usage (Vendor Usage 0x69)        370
+0x81, 0xa3,                    //    Input (Cnst,Var,Abs,NoPref,Vol)  372
+0x09, 0x69,                    //    Usage (Vendor Usage 0x69)        374
+None
