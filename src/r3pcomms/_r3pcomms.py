@@ -371,7 +371,16 @@ class R3PComms:
     def hid_get(self) -> dict:
         result = {}
         # for consideration: 12 17 13 11 18 19 1 7
-        for rid in (12,):
+        to_read = (12, 17, 13, 11, 18, 19, 1, 7)
+        #to_read.append((12, 16))  # Cnst,Var,Abs,Vol
+        #to_read.append((17, 16))  # Data,Var,Abs,NoPref,Vol
+        #to_read.append((13, 16))  # Cnst,Var,Abs,NoPref,Vol
+        #to_read.append((11, 16))  # Cnst,Var,Abs,NoPref
+        #to_read.append((18, 16))  # Data,Var,Abs,NoPref,Vol
+        #to_read.append((19, 16))  # Data,Var,Abs,NoPref,Vol
+        #to_read.append((1,  128))  # Cnst,Var,Abs,Vol
+        #to_read.append((7,  1))  # 
+        for rid in to_read:
             data = self.read_raw_report(rid)
             if data:
                 report = {}
@@ -382,7 +391,7 @@ class R3PComms:
                     unit = "%"
                 else:
                     name = "unknown-h"
-                    rpt_val = data.hex()
+                    rpt_val = data[1:].hex()
                     unit = "?"
                 i = 0
                 last_name = name
@@ -391,7 +400,7 @@ class R3PComms:
                     i += 1
                 result[name] = {
                     "type": f"h{rid}",
-                    "data": "0x" + data.hex(),
+                    "data": "0x" + data[1:].hex(),
                     "value": rpt_val,
                     "unit": unit,
                 }
