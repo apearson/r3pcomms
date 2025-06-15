@@ -22,6 +22,8 @@ int BPF_PROG(r3_plus_fix_rdesc, struct hid_bpf_ctx *hctx)
 
     // append 3x 0xC0 to the report descriptor
     // because it is missing these three end collection bytes
+    // this fixes a firmware bug known to be present in
+    // river 3 plus FW V1.33.81.55
     data[expected_length] = 0xC0;
     data[expected_length + 1] = 0xC0;
     data[expected_length + 2] = 0xC0;
