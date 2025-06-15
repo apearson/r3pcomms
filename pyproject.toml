@@ -20,7 +20,7 @@ authors = [
 
 dependencies = [
   "pyserial",
-  "pyusb",
+  "hidapi",
 ]
 
 [project.scripts]

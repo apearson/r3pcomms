@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 import serial
-import usb.core
-import usb.util
+import hid
 import struct
 from operator import xor
 
@@ -19,9 +18,10 @@ class R3PComms:
     held_xdbg: bytes
     held_dbg: bytes
     s: serial.Serial | None
-    u: usb.core.Device | None
+    h: hid.device | None
+    hid_path: str
 
-    def __init__(self, comport: str = "", usbdev: str = "", debug: int = 0) -> None:
+    def __init__(self, comport: str = "", hiddev: str = "", debug: int = 0) -> None:
         self.sequence_num = 0
         self.debug_prints = debug
 
@@ -39,21 +39,21 @@ class R3PComms:
         else:
             self.s = None
 
-        if usbdev:
-            vid, pid = usbdev.split(":")
+        if hiddev:
+            vid, pid = hiddev.split(":")
             vid = int(vid, 16)
             pid = int(pid, 16)
-            self.u = usb.core.find(idVendor=vid, idProduct=pid)
-            if self.u is None:
+            self.hid_path = self.find_hid_device(pid, vid)
+            if self.hid_path:
+                self.h = hid.device()
+                if self.debug_prints >= 2:
+                    print(f"Found HID device: {self.hid_path}")
+            else:
                 raise ValueError(
                     f"{hex(vid)}:{hex(pid)} not found. Check Vendor ID and Product ID"
                 )
-            else:
-                if self.debug_prints >= 2:
-                    print(f"Found USB device!\n{self.u}")
-
         else:
-            self.u = None
+            self.h = None
 
         self.sequence_num = 0
         self.serial_number = b""
@@ -62,65 +62,32 @@ class R3PComms:
         self.held_dbg = b""
 
     def __enter__(self):
-        self.detach_usb_drivers()
-
         if self.s:
             self.sequence_num = 0
             self.s.open()
+        if self.h:
+            self.h.open_path(self.hid_path)
 
         return self
 
     def __exit__(self, type, value, traceback):
+        if self.h:
+            self.h.close()
         if self.s:
-
             self.s.close()
             ret = self.s.__exit__(type, value, traceback)
         else:
             ret = None
-        self.reattach_usb_drivers(all=True)
         return ret
 
-    def detach_usb_drivers(self) -> None:
-        if self.u is None:
-            return
-
-        for cfg in self.u:
-            for intf in cfg:
-                if self.debug_prints >= 2:
-                    print(f"Found USB interface!\n{intf}")
-                if self.u.is_kernel_driver_active(intf.bInterfaceNumber):
-                    if self.debug_prints >= 2:
-                        print(f"Detaching INTERFACE {intf.bInterfaceNumber}")
-                    if intf.bInterfaceClass == 0x3:  # HID
-                        if self.debug_prints >= 2:
-                            print(f"Detaching INTERFACE {intf.bInterfaceNumber}")
-                        self.u.detach_kernel_driver(intf.bInterfaceNumber)
-                    else:
-                        if self.debug_prints >= 2:
-                            print(f"Not Detaching INTERFACE {intf.bInterfaceNumber}")
-                else:
-                    if self.debug_prints >= 2:
-                        print(f"No driver on INTERFACE {intf.bInterfaceNumber}")
-
-        # self.u.set_configuration()  # seems to make things unstable
-
-    def reattach_usb_drivers(self, all: bool = False) -> None:
-        if self.u is None:
-            return
-
-        usb.util.dispose_resources(self.u)
-        for cfg in self.u:
-            for intf in cfg:
-                if self.debug_prints >= 2:
-                    print(f"Found USB interface!\n{intf}")
-                if self.u.is_kernel_driver_active(intf.bInterfaceNumber):
-                    if self.debug_prints >= 2:
-                        print(f"No need to attach INTERFACE {intf.bInterfaceNumber}")
-                else:
-                    if all or intf.bInterfaceClass != 0x3:
-                        if self.debug_prints >= 2:
-                            print(f"Reattaching INTERFACE {intf.bInterfaceNumber}")
-                        self.u.attach_kernel_driver(intf.bInterfaceNumber)
+    def find_hid_device(self, pid: str, vid: str) -> str | None:
+        ret = None
+        devices = hid.enumerate()
+        for device in devices:
+            if device["vendor_id"] == vid and device["product_id"] == pid:
+                if "hidraw" in device["path"].decode("utf-8"):
+                    ret = device["path"]
+        return ret
 
     @staticmethod
     def crc16(data: bytes) -> int:
@@ -301,40 +268,20 @@ class R3PComms:
         return rx
 
     def read_raw_report(self, report_id, length=16) -> bytes | None:
-        if self.u:
+        if self.h:
             try:
-                bmRequestType = 0xA1
-                bRequest = 0x01
-                wValue = (3 << 8) | report_id
-                wIndex = 0
-                data_or_wLength = length
                 if self.debug_prints >= 1:
-                    dbg_out = (
-                        bmRequestType.to_bytes(1)
-                        + bRequest.to_bytes(1)
-                        + wValue.to_bytes(2)
-                        + wIndex.to_bytes(1)
-                        + data_or_wLength.to_bytes(1)
-                    )
+                    dbg_out = (report_id.to_bytes(1), length.to_bytes(1))
                     print(f">h> {dbg_out.hex()}")
-                data = self.u.ctrl_transfer(
-                    bmRequestType=bmRequestType,
-                    bRequest=bRequest,
-                    wValue=wValue,
-                    wIndex=wIndex,
-                    data_or_wLength=data_or_wLength,
-                )
+                data = self.h.get_feature_report(report_id, length)
                 data = bytes(data)
                 if self.debug_prints >= 1:
                     print(f"<h< {data.hex()}")
                 ret = data
-            except usb.core.USBError:
-                ret = None
+            except Exception as e:
+                raise ValueError(f"Failure reading report {report_id}: {e}")
         else:
             ret = None
-
-        if ret is None:
-            raise ValueError(f"Failure reading report {report_id}")
 
         return ret
 
@@ -364,7 +311,7 @@ class R3PComms:
         metrics = {}
         if self.s:
             metrics |= self.ser_get()
-        if self.u:
+        if self.h:
             metrics |= self.hid_get()
         return metrics
 
@@ -372,14 +319,14 @@ class R3PComms:
         result = {}
         # for consideration: 12 17 13 11 18 19 1 7
         to_read = (12, 17, 13, 11, 18, 19, 1, 7)
-        #to_read.append((12, 16))  # Cnst,Var,Abs,Vol
-        #to_read.append((17, 16))  # Data,Var,Abs,NoPref,Vol
-        #to_read.append((13, 16))  # Cnst,Var,Abs,NoPref,Vol
-        #to_read.append((11, 16))  # Cnst,Var,Abs,NoPref
-        #to_read.append((18, 16))  # Data,Var,Abs,NoPref,Vol
-        #to_read.append((19, 16))  # Data,Var,Abs,NoPref,Vol
-        #to_read.append((1,  128))  # Cnst,Var,Abs,Vol
-        #to_read.append((7,  1))  # 
+        # to_read.append((12, 16))  # Cnst,Var,Abs,Vol
+        # to_read.append((17, 16))  # Data,Var,Abs,NoPref,Vol
+        # to_read.append((13, 16))  # Cnst,Var,Abs,NoPref,Vol
+        # to_read.append((11, 16))  # Cnst,Var,Abs,NoPref
+        # to_read.append((18, 16))  # Data,Var,Abs,NoPref,Vol
+        # to_read.append((19, 16))  # Data,Var,Abs,NoPref,Vol
+        # to_read.append((1,  128))  # Cnst,Var,Abs,Vol
+        # to_read.append((7,  1))  #
         for rid in to_read:
             data = self.read_raw_report(rid)
             if data:
