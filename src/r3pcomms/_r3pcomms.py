@@ -272,7 +272,7 @@ class R3PComms:
             try:
                 if self.debug_prints >= 1:
                     dbg_out = (report_id.to_bytes(1), length.to_bytes(1))
-                    print(f">h> {dbg_out.hex()}")
+                    print(f">h> {dbg_out[0].hex()}{dbg_out[1].hex()}")
                 data = self.h.get_feature_report(report_id, length)
                 data = bytes(data)
                 if self.debug_prints >= 1:
