@@ -17,6 +17,7 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
         d.redact_sn = hide_sn
         do_sleep = False
         t0 = time.time()
+        t1 = float("NaN")
         count = 0
         while actions:
             count += 1
@@ -26,10 +27,12 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
             else:
                 do_sleep = True
             result = getattr(d, action["fun"])(*action["args"], **action["kwargs"])
-            t1 = time.time()
-            dt = t1 - t0
-            result = {"Timestamp": {"type": "i0", "data":t1.hex(), "value": t1, "unit": "s"}} | result
-            result = {"Delta-t": {"type": "i1", "data":dt.hex(), "value": dt, "unit": "s"}} | result
+            t2 = time.time()
+            dt = t2 - t1
+            t = t2 - t0
+            result = {"Unix Time": {"type": "i0", "data":t2.hex(), "value": t2, "unit": "s"}} | result
+            result = {"Delta Time": {"type": "i1", "data":dt.hex(), "value": dt, "unit": "s"}} | result
+            result = {"Run Time": {"type": "i2", "data":t.hex(), "value": t, "unit": "s"}} | result
 
             if not d.debug_prints:
                 result = {
@@ -52,6 +55,7 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
                 print(json.dumps(result))
             if inf and action["fun"] == "get":
                 actions.append(action)
+            t1 = t2
 
 
 def main_parser() -> argparse.ArgumentParser:
