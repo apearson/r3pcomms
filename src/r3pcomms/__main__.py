@@ -26,8 +26,10 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
             else:
                 do_sleep = True
             result = getattr(d, action["fun"])(*action["args"], **action["kwargs"])
-            t = time.time() - t0
-            result = {"Timestamp": {"type": "i0", "data":t.hex(), "value": t, "unit": "s"}} | result
+            t1 = time.time()
+            dt = t1 - t0
+            result = {"Timestamp": {"type": "i0", "data":t1.hex(), "value": t1, "unit": "s"}} | result
+            result = {"Delta-t": {"type": "i1", "data":dt.hex(), "value": dt, "unit": "s"}} | result
 
             if not d.debug_prints:
                 result = {
