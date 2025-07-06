@@ -27,6 +27,7 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
                 do_sleep = True
             result = getattr(d, action["fun"])(*action["args"], **action["kwargs"])
             t = time.time() - t0
+            result = {"Timestamp": {"type": "i0", "data":t.hex(), "value": t, "unit": "s"}} | result
 
             if not d.debug_prints:
                 result = {
@@ -38,7 +39,6 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
             if h:
                 if len(actions) != 0 or inf:
                     print(chr(27) + "[2J")
-                result = {"Timestamp": {"value": t, "unit": "s"}} | result
                 result = {"Iteration": {"value": count, "unit": ""}} | result
                 for key, val in result.items():
                     value = val["value"]
