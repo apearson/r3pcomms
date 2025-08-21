@@ -33,7 +33,21 @@ options:
 ```
 For USB device permissions issues, see: https://github.com/pyusb/pyusb/blob/master/docs/faq.rst#how-to-practically-deal-with-permission-issues-on-linux  
 My River 3 Plus has a USB `vendorID:productID` of `3746:ffff`
-### Examples
+
+### Integration with Home Assistant
+The Arch package installs a script, [homeassistant-mqtt-publisher.sh](scripts/homeassistant-mqtt-publisher.sh), to export the power station's monitored parameters to Home Assistant via MQTT. You can either edit it to uncomment three environment variables and redefine them for your setup or export them in the environment you run the script in:
+```bash
+export MQTTUI_BROKER="mqtt://192.168.1.1:1883"
+export MQTTUI_USERNAME="homeassistant"
+export MQTTUI_PASSWORD="your hass mqtt password here"
+```
+After running the script, and after [you've added the proper entites as MQTT sensors](https://www.home-assistant.io/integrations/mqtt/#configuration), Home Assistant can now log and display all of the power station's parameters:
+![overview](doc/overview.gif)
+![AC](doc/ac.gif)
+![PV](doc/pv.gif)
+New data will appear about once per second in Home Assistant's MQTT Broker topic `r3pcomms/DEVICESERIALNUMBER` with the following json format following that shown in the command line usage examples in the next secion.
+
+### Command Line Examples
 In linux, using serial + HID comms, output formatted for humans:
 ```
 $ python -m r3pcomms --serial /dev/ttyACM0 --hid --redact-serial --humanize
@@ -100,6 +114,7 @@ $ python -m r3pcomms --serial /dev/ttyACM0 --hid --number 3 --redact-serial --de
 <h< 0c4c
 {"unknown-s": {"type": "s2", "data": "0x00000000", "value": 0.0, "unit": "?"}, "Design Capacity?": {"type": "s3", "data": "0x00320000", "value": 12800, "unit": "?"}, "Capacity?/Battery Voltage?": {"type": "s4", "data": "0x1a1c1919", "value": [7194, 6425], "unit": "?"}, "unknown-s0": {"type": "s5", "data": "0x00000000", "value": 0.0, "unit": "?"}, "unknown-s1": {"type": "s6", "data": "0x00000000", "value": 0.0, "unit": "?"}, "Total Load": {"type": "s7", "data": "0x19856643", "value": 230.51991271972656, "unit": "W"}, "Total Draw": {"type": "s8", "data": "0x5a0deb41", "value": 29.381519317626953, "unit": "W"}, "AC Draw": {"type": "s9", "data": "0x00000000", "value": 0.0, "unit": "W"}, "AC Draw Frequency?": {"type": "s10", "data": "0x00000000", "value": [0, 0], "unit": "Hz"}, "unknown-s2": {"type": "s11", "data": "0x00000000", "value": 0.0, "unit": "?"}, "Solar/DC Draw": {"type": "s12", "data": "0x5a0deb41", "value": 29.381519317626953, "unit": "W"}, "unknown-s3": {"type": "s13", "data": "0x58020000", "value": 8.407790785948902e-43, "unit": "?"}, "AC Load": {"type": "s14", "data": "0x198566c3", "value": 230.51991271972656, "unit": "W"}, "AC Load Frequency?": {"type": "s15", "data": "0x3c000000", "value": [60, 0], "unit": "Hz"}, "DC Load": {"type": "s16", "data": "0x00000000", "value": -0.0, "unit": "W"}, "USB-A Load": {"type": "s17", "data": "0x00000000", "value": -0.0, "unit": "W"}, "USB-C Load": {"type": "s18", "data": "0x00000000", "value": -0.0, "unit": "W"}, "unknown-s4": {"type": "s19", "data": "0x00000000", "value": 0.0, "unit": "?"}, "unknown-s5": {"type": "s20", "data": "0x00000000", "value": 0.0, "unit": "?"}, "unknown-s6": {"type": "s21", "data": "0x00000000", "value": 0.0, "unit": "?"}, "Serial Num": {"type": "s22", "data": "0xffffffffffffffffffffffffffffffff", "value": "REDACTED", "unit": ""}, "Time left?": {"type": "s23", "data": "0x33170000", "value": [98.98333333333333, 0.0], "unit": "Hr?"}, "unknown-s7": {"type": "s24", "data": "0x00000000", "value": 0.0, "unit": "?"}, "unknown-s8": {"type": "s25", "data": "0x23010002", "value": 9.404281028860795e-38, "unit": "?"}, "preamble?": {"type": "pre", "data": "aa03b800392f02000000014402220101660201010000", "value": 0, "unit": ""}, "Charge Level": {"type": "h12", "data": "0x0c4c", "value": 76, "unit": "%"}}
 ```
+
 ## Installation
 ### From the Arch User Repository via paru
 https://aur.archlinux.org/packages/python-r3pcomms-git
