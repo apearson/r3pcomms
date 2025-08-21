@@ -52,7 +52,7 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
                     else:
                         print(f'{key}:\t{value}{val["unit"]}')
             else:
-                print(json.dumps(result))
+                print(json.dumps(result), flush=True)
             if inf and action["fun"] == "get":
                 actions.append(action)
             t1 = t2
