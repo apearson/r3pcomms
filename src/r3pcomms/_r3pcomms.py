@@ -179,7 +179,7 @@ class R3PComms:
                 unit = "mAh"
             elif seg_type == 4:
                 seg_val = struct.unpack("<BBBB", seg_data)
-                name = "Operational Flags?"
+                name = "Operational Flags/Temperature?"
                 unit = "?"
             elif seg_type == 7:
                 seg_val = struct.unpack("f", seg_data)[0]
@@ -201,7 +201,7 @@ class R3PComms:
                 seg_val = struct.unpack("f", seg_data)[0]
                 name = "Solar/DC Draw"
                 unit = "W"
-          elif seg_type == 13:
+            elif seg_type == 13:
                 seg_val = struct.unpack("<L", seg_data)[0]
                 name = "Line Frequency?"
                 unit = "Hz"
@@ -335,14 +335,14 @@ class R3PComms:
             data = self.read_raw_report(rid)
             if data:
                 report = {}
-
+                payload = data[1:]
                 if rid == 12:
                     name = "Charge Level"
-                    rpt_val = data[1]
+                    rpt_val = payload[0]
                     unit = "%"
                 elif rid == 13:
                     name = "Flags/Operation Mode?"
-                    val = data[1:].hex()
+                    val = payload.hex()
                     if val == "2d00":
                         rpt_val = "Discharging"
                     elif val == "3317":
@@ -352,7 +352,7 @@ class R3PComms:
                     unit = ""
                 else:
                     name = "unknown-h"
-                    rpt_val = data[1:].hex()
+                    rpt_val = payload.hex()
                     unit = "?"
                 i = 0
                 last_name = name
@@ -361,7 +361,7 @@ class R3PComms:
                     i += 1
                 result[name] = {
                     "type": f"h{rid}",
-                    "data": "0x" + data[1:].hex(),
+                    "data": "0x" + payload.hex(),
                     "value": rpt_val,
                     "unit": unit,
                 }
