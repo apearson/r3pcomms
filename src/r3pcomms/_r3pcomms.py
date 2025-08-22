@@ -246,7 +246,11 @@ class R3PComms:
                 seg_val = struct.unpack("<HH", seg_data)
                 seg_val = tuple([x / 60 for x in seg_val])
                 name = "Time left?"
-                unit = "Hr?"
+                unit = "Hr"
+            elif seg_type == 25:
+                seg_val = seg_data.hex()
+                name = "Manufacture Batch/Date?"
+                unit = "?"
             else:
                 seg_val = struct.unpack("f", seg_data)[0]
                 name = "unknown-s"
