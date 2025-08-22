@@ -202,7 +202,7 @@ class R3PComms:
                 name = "Solar/DC Draw"
                 unit = "W"
             elif seg_type == 13:
-                seg_val = struct.unpack("<L", seg_data)[0]/10
+                seg_val = struct.unpack("<L", seg_data)[0] / 10
                 name = "Line Frequency?"
                 unit = "Hz"
             elif seg_type == 14:

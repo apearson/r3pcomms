@@ -30,9 +30,19 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
             t2 = time.time()
             dt = t2 - t1
             t = t2 - t0
-            result = {"Unix Time": {"type": "i0", "data":t2.hex(), "value": t2, "unit": "s"}} | result
-            result = {"Delta Time": {"type": "i1", "data":dt.hex(), "value": dt, "unit": "s"}} | result
-            result = {"Run Time": {"type": "i2", "data":t.hex(), "value": t, "unit": "s"}} | result
+            ver = r3pcomms.__version__
+            result = {
+                "Version": {"type": "i0", "data": ver, "value": ver, "unit": ""}
+            } | result
+            result = {
+                "Unix Time": {"type": "i1", "data": t2.hex(), "value": t2, "unit": "s"}
+            } | result
+            result = {
+                "Delta Time": {"type": "i2", "data": dt.hex(), "value": dt, "unit": "s"}
+            } | result
+            result = {
+                "Run Time": {"type": "i3", "data": t.hex(), "value": t, "unit": "s"}
+            } | result
 
             if not d.debug_prints:
                 result = {
