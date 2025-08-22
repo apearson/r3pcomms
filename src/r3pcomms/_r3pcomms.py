@@ -340,6 +340,16 @@ class R3PComms:
                     name = "Charge Level"
                     rpt_val = data[1]
                     unit = "%"
+                elif rid == 13:
+                    name = "Flags/Operation Mode?"
+                    val = data[1:].hex()
+                    if val == "2d00":
+                        rpt_val = "Discharging"
+                    elif val == "3317":
+                        rpt_val = "Charging"
+                    else:
+                        rpt_val = "Unknown"
+                    unit = ""
                 else:
                     name = "unknown-h"
                     rpt_val = data[1:].hex()
