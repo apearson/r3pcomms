@@ -175,11 +175,11 @@ class R3PComms:
             offset += 3 + seg_len
             if seg_type == 3:
                 seg_val = struct.unpack("<I", seg_data)[0]
-                name = "Design Capacity?"
-                unit = "?"
+                name = "Design Charge Capacity"
+                unit = "mAh"
             elif seg_type == 4:
-                seg_val = struct.unpack("<HH", seg_data)
-                name = "Capacity?/Battery Voltage?"
+                seg_val = struct.unpack("<BBBB", seg_data)
+                name = "Operational Flags?"
                 unit = "?"
             elif seg_type == 7:
                 seg_val = struct.unpack("f", seg_data)[0]
@@ -201,6 +201,10 @@ class R3PComms:
                 seg_val = struct.unpack("f", seg_data)[0]
                 name = "Solar/DC Draw"
                 unit = "W"
+          elif seg_type == 13:
+                seg_val = struct.unpack("<L", seg_data)[0]
+                name = "Line Frequency?"
+                unit = "Hz"
             elif seg_type == 14:
                 seg_val = struct.unpack("f", seg_data)[0] * -1
                 name = "AC Load"
