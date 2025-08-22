@@ -249,7 +249,7 @@ class R3PComms:
                 unit = "Hr"
             elif seg_type == 25:
                 seg_val = seg_data.hex()
-                name = "Manufacture Batch/Date?"
+                name = "Mfg. Model/Batch/Date?"
                 unit = "?"
             else:
                 seg_val = struct.unpack("f", seg_data)[0]
