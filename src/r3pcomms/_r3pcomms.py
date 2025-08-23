@@ -174,58 +174,56 @@ class R3PComms:
             seg_data = source[offset + 3 : offset + 3 + seg_len]
             offset += 3 + seg_len
             if seg_type == 3:
-                seg_val = struct.unpack("<I", seg_data)[0]
                 name = "Design Charge Capacity"
+                seg_val = struct.unpack("<I", seg_data)[0]
                 unit = "mAh"
             elif seg_type == 4:
+                name = "Temperatures"
                 seg_val = struct.unpack("<BBBB", seg_data)
-                name = "Operational Flags/Temperature?"
-                unit = "?"
+                # the second one is for the battery
+                unit = "degC"
             elif seg_type == 7:
-                seg_val = struct.unpack("f", seg_data)[0]
                 name = "Total Load"
+                seg_val = struct.unpack("f", seg_data)[0]
                 unit = "W"
             elif seg_type == 8:
-                seg_val = struct.unpack("f", seg_data)[0]
                 name = "Total Draw"
+                seg_val = struct.unpack("f", seg_data)[0]
                 unit = "W"
             elif seg_type == 9:
-                seg_val = struct.unpack("f", seg_data)[0]
                 name = "AC Draw"
-                unit = "W"
-            elif seg_type == 10:
-                seg_val = struct.unpack("<HH", seg_data)
-                name = "AC Draw Frequency?"
-                unit = "Hz"
-            elif seg_type == 12:
                 seg_val = struct.unpack("f", seg_data)[0]
+                unit = "W"
+            elif seg_type == 12:
                 name = "Solar/DC Draw"
+                seg_val = struct.unpack("f", seg_data)[0]
                 unit = "W"
             elif seg_type == 13:
-                seg_val = struct.unpack("<L", seg_data)[0] / 10
                 name = "Line Frequency?"
+                seg_val = struct.unpack("<L", seg_data)[0] / 10
                 unit = "Hz"
             elif seg_type == 14:
-                seg_val = struct.unpack("f", seg_data)[0] * -1
                 name = "AC Load"
+                seg_val = struct.unpack("f", seg_data)[0] * -1
                 unit = "W"
             elif seg_type == 15:
-                seg_val = struct.unpack("<HH", seg_data)
                 name = "AC Load Frequency?"
+                seg_val = struct.unpack("<HH", seg_data)
                 unit = "Hz"
             elif seg_type == 16:
-                seg_val = struct.unpack("f", seg_data)[0] * -1
                 name = "DC Load"
+                seg_val = struct.unpack("f", seg_data)[0] * -1
                 unit = "W"
             elif seg_type == 17:
-                seg_val = struct.unpack("f", seg_data)[0] * -1
                 name = "USB-A Load"
+                seg_val = struct.unpack("f", seg_data)[0] * -1
                 unit = "W"
             elif seg_type == 18:
-                seg_val = struct.unpack("f", seg_data)[0] * -1
                 name = "USB-C Load"
+                seg_val = struct.unpack("f", seg_data)[0] * -1
                 unit = "W"
             elif seg_type == 22:
+                name = "Serial Num"
                 seg_val = struct.unpack(f"{seg_len}s", seg_data)[0]
                 self.serial_number = seg_val
                 if self.debug_print:
@@ -240,20 +238,25 @@ class R3PComms:
                     seg_data = bytes.fromhex("ff") * len(self.serial_number)
                 else:
                     seg_val = seg_val.decode()
-                name = "Serial Num"
                 unit = ""
             elif seg_type == 23:
-                seg_val = struct.unpack("<HH", seg_data)
-                seg_val = tuple([x / 60 for x in seg_val])
-                name = "Time left?"
-                unit = "Hr"
+                name = "Remaining Charge Time"
+                unpacked = struct.unpack("<HH", seg_data)
+                if seg_data[:2] == bytes.fromhex("3317"):
+                    # 0x3317 means the battery is not charging?
+                    seg_val = 0
+                else:
+                    seg_val = unpacked[0]
+                # seg_val = tuple([x / 60 for x in seg_val])
+                unit = "min"
+                # unit = "Hr"
             elif seg_type == 25:
+                name = "Model/Mfg. Batch/Date?"
                 seg_val = seg_data.hex()
-                name = "Mfg. Model/Batch/Date?"
                 unit = "?"
             else:
-                seg_val = struct.unpack("f", seg_data)[0]
                 name = "unknown-s"
+                seg_val = struct.unpack("<HH", seg_data)
                 unit = "?"
             i = 0
             last_name = name
@@ -325,7 +328,6 @@ class R3PComms:
 
     def hid_get(self) -> dict:
         result = {}
-        # for consideration: 12 17 13 11 18 19 1 7
         to_read = (12, 17, 13, 11, 18, 19, 1, 7)
         # to_read.append((12, 16))  # Cnst,Var,Abs,Vol
         # to_read.append((17, 16))  # Data,Var,Abs,NoPref,Vol
@@ -338,22 +340,20 @@ class R3PComms:
         for rid in to_read:
             data = self.read_raw_report(rid)
             if data:
-                report = {}
                 payload = data[1:]
-                if rid == 12:
+                if rid == 7:
+                    name = "flags?"
+                    rpt_val = "".join([f"{x:08b}" for x in payload])
+                    unit = "?"
+                elif rid == 12:
                     name = "Charge Level"
                     rpt_val = payload[0]
                     unit = "%"
                 elif rid == 13:
-                    name = "Flags/Operation Mode?"
-                    val = payload.hex()
-                    if val == "2d00":
-                        rpt_val = "Discharging"
-                    elif val == "3317":
-                        rpt_val = "Charging"
-                    else:
-                        rpt_val = "Unknown"
-                    unit = ""
+                    name = "unsure?"
+                    # often becomes 0x3317...
+                    rpt_val = payload.hex()
+                    unit = "?"
                 else:
                     name = "unknown-h"
                     rpt_val = payload.hex()
