@@ -1,7 +1,7 @@
 # r3pcomms
 Local communication with a River 3 Plus over USB HID and/or CDC(ACM)
 
-[![usage](doc/usage.gif)](https://asciinema.org/a/722902)
+[![usage](doc/usage.gif)](https://asciinema.org/a/735291)
 
 ## Usage
 ```
