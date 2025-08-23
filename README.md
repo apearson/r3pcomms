@@ -74,18 +74,27 @@ USB-C Load|Watts|
 In linux, using serial + HID comms, output formatted for humans:
 ```
 $ python -m r3pcomms --serial /dev/ttyACM0 --hid --redact-serial --humanize
-Iteration:	1
-Timestamp:	0.1s
-Total Load:	238.3W
-Total Draw:	255.8W
-AC Draw:	236.5W
-Solar/DC Draw:	19.3W
-AC Load:	236.5W
-DC Load:	0.0W
-USB-A Load:	1.7W
-USB-C Load:	0.0W
-Serial Num:	REDACTED
-Charge Level:	76%
+Iteration:      1
+Run Time:       0.1s
+Delta Time:     nans
+Unix Time:      1755972571.0s
+Version:        3.1.3
+Design Charge Capacity: 12800mAh
+Temperatures:   (30, 32, 25, 25)degC
+Total Load:     292.0W
+Total Draw:     83.8W
+AC Draw:        0.0W
+Solar/DC Draw:  83.8W
+AC Load:        281.5W
+DC Load:        0.0W
+USB-A Load:     6.1W
+USB-C Load:     4.4W
+Serial Num:     REDACTED
+Remaining Charge Time:  -1min
+Charge Level:   85%
+Battery Time Remaining: (64,)min
+Flags:  0b0000111000000000
+AC In Live:     True
 ```
 in Windows using com port:
 ```
