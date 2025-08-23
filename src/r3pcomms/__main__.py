@@ -51,9 +51,9 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
                     ac = True
                 else:
                     ac = False
-                result = {
+                result = result | {
                     "AC In Live": {"type": "d0", "data": ac, "value": ac, "unit": ""}
-                } | result
+                }
 
             if not d.debug_prints:
                 result = {
