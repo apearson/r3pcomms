@@ -44,6 +44,17 @@ def run(com: str, usb: str, actions: list[dict], dbg: bool, hide_sn: bool, p, in
                 "Run Time": {"type": "i3", "data": t.hex(), "value": t, "unit": "s"}
             } | result
 
+            if "Flags" in result:
+                bit = 10  # AC input bit
+                data_bytes = bytes.fromhex(result["Flags"]["data"][2:])
+                if int.from_bytes(data_bytes) & int(bin(1 << bit)[2:], 2):
+                    ac = True
+                else:
+                    ac = False
+                result = {
+                    "AC In Live": {"type": "d0", "data": ac, "value": ac, "unit": ""}
+                } | result
+
             if not d.debug_prints:
                 result = {
                     k: v

@@ -244,9 +244,9 @@ class R3PComms:
                 unpacked = struct.unpack("<HH", seg_data)
                 if seg_data[:2] == bytes.fromhex("3317"):
                     # 0x3317 means the battery is not charging?
-                    seg_val = 0
+                    seg_val = -1
                 else:
-                    seg_val = unpacked[0]
+                    seg_val = unpacked
                 # seg_val = tuple([x / 60 for x in seg_val])
                 unit = "min"
                 # unit = "Hr"
@@ -342,18 +342,21 @@ class R3PComms:
             if data:
                 payload = data[1:]
                 if rid == 7:
-                    name = "flags?"
-                    rpt_val = "".join([f"{x:08b}" for x in payload])
-                    unit = "?"
+                    name = "Flags"
+                    rpt_val = "0b" + "".join([f"{x:08b}" for x in payload])
+                    unit = ""
                 elif rid == 12:
                     name = "Charge Level"
                     rpt_val = payload[0]
                     unit = "%"
                 elif rid == 13:
-                    name = "unsure?"
-                    # often becomes 0x3317...
-                    rpt_val = payload.hex()
-                    unit = "?"
+                    name = "Battery Time Remaining"
+                    if payload == bytes.fromhex("3317"):
+                        # I geuss 0x3317 means the battery is not discharging
+                        rpt_val = -1
+                    else:
+                        rpt_val = struct.unpack("<H", payload)
+                    unit = "min"
                 else:
                     name = "unknown-h"
                     rpt_val = payload.hex()
