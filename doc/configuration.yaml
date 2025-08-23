@@ -1,0 +1,228 @@
+mqtt:
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'UNIT_SERIAL_NUMBER_REDACTED'
+      name: Power Station
+    device_class: power
+    name: USB-A Load
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_4962ec9845674a30a292bce91cf92034
+    unit_of_measurement: W
+    value_template: '{{ value_json["USB-A Load"]["value"] | abs }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: AC Load
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_4ec150603e704430888c162310fccdf9
+    unit_of_measurement: W
+    value_template: '{{ value_json["AC Load"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: Total Draw
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_6fb71bb66ed549009ffe79e2896d0494
+    unit_of_measurement: W
+    value_template: '{{ value_json["Total Draw"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: battery
+    name: null
+    qos: 0.0
+    state_class: total
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    suggested_display_precision: 0
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_75685edd07ac4b22b9634193014c38a7
+    unit_of_measurement: '%'
+    value_template: '{{ value_json["Charge Level"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: DC Load
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_80885dce5e174e378bbc399dfefcafe0
+    unit_of_measurement: W
+    value_template: '{{ value_json["DC Load"]["value"] | abs }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: AC Draw
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_8e08e0cfec294ceba30c56cba3bc2062
+    unit_of_measurement: W
+    value_template: '{{ value_json["AC Draw"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: Total Load
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_c1239ef960ad48efb887514273f82460
+    unit_of_measurement: W
+    value_template: '{{ value_json["Total Load"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: timestamp
+    entity_category: diagnostic
+    name: Timestamp
+    qos: 0.0
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_c70a932bf301436aa9f258715b8ee11c
+    value_template: '{{ as_datetime(value_json["Unix Time"]["value"]) }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: USB-C Load
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_c8e8287b69864cfc9b7ac30395dc20dd
+    unit_of_measurement: W
+    value_template: '{{ value_json["USB-C Load"]["value"] | abs }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: Solar/DC Draw
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_d5bc1b4cacee4f328bedf5eb04d3d502
+    unit_of_measurement: W
+    value_template: '{{ value_json["Solar/DC Draw"]["value"] }}'
+- binary_sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: power
+    name: AC Input Active
+    payload_off: 'False'
+    payload_on: 'True'
+    qos: 0.0
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_5a663f583c374d7cad5b1cc319a86cfe
+    value_template: '{{ value_json["AC In Live"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: duration
+    name: Remaining Charge Time
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_7c60c2c42ed84a9b8ef5a2dacdb9f9c5
+    unit_of_measurement: min
+    value_template: '{{ value_json["Remaining Charge Time"]["value"][0] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: duration
+    name: Battery Time Remaining
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_b0fb6e8886f84b6fb4b7854e1b2760f3
+    unit_of_measurement: min
+    value_template: '{{ value_json["Battery Time Remaining"]["value"] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: temperature
+    name: Battery Temperature
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    suggested_display_precision: 0
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_830e6e8f95164e8eb44a5eb04e2db168
+    unit_of_measurement: "\xB0C"
+    value_template: '{{ value_json["Temperatures"]["value"][1] }}'
+- sensor:
+    device:
+      identifiers:
+      - 01K35J37S9S89QW9221NJJK3KV
+      model: River 3 Plus
+      model_id: 'SERIAL # REDACTED'
+      name: Power Station
+    device_class: temperature
+    name: System Temperature
+    qos: 0.0
+    state_class: measurement
+    state_topic: r3pcomms/UNIT_SERIAL_NUMBER_REDACTED
+    suggested_display_precision: 0
+    unique_id: 01K35J37S9S89QW9221NJJK3KV_2fdafaac44404e798ab18fe4ad480a42
+    unit_of_measurement: "\xB0C"
+    value_template: '{{ value_json["Temperatures"]["value"][0] }}'
