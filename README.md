@@ -41,30 +41,34 @@ export MQTTUI_BROKER="mqtt://192.168.1.1:1883"
 export MQTTUI_USERNAME="homeassistant"
 export MQTTUI_PASSWORD="your hass mqtt password here"
 ```
-After running the script, and after [you've added the proper entites as MQTT sensors](https://www.home-assistant.io/integrations/mqtt/#configuration)[1], Home Assistant can now log and display all of the power station's parameters:
-![overview](doc/overview.gif)
-![AC](doc/ac.gif)
-![PV](doc/pv.gif)
+After running the script, and after [you've added the proper entites as MQTT sensors](https://www.home-assistant.io/integrations/mqtt/#configuration)[1], Home Assistant can now log and display all of the power station's parameters.
+
 New data will appear about once per second in Home Assistant's MQTT Broker topic `r3pcomms/DEVICESERIALNUMBER` with the following json format following that shown in the command line usage examples in the next secion.
 
 \[1]: Here's my Home Assistant MQTT [configuration.yaml](doc/configuration.yaml) to help you get started.
 
+![overview](doc/overview.gif)
+![AC](doc/ac.gif)
+![PV](doc/pv.gif)
+
 #### Sensors/Entities working so far in Home Assistant
 You can log/view the values for the following items with roughly one second time resolution
-- AC Draw -- Watts
-- AC Input Active -- Boolean
-- AC Load -- Watts
-- Battery Temperature -- Degrees Celcius
-- Battery Time Remaining -- Minutes (`-1` when the battery is not discharging)
-- DC Load -- Watts
-- Remaining Charge Time -- Minutes (`-1` when the battery is not charging up)
-- Solar/DC Draw -- Watts
-- State of Charge -- Percentage
-- System Temperature -- Degrees Celcius
-- Total Draw -- Watts
-- Total Load -- Watts
-- USB-A Load -- Watts
-- USB-C Load -- Watts
+Entity Name | Unit | Notes
+------------|------|------
+AC Draw|Watts|
+AC Input Active|Boolean|
+AC Load|Watts|
+Battery Temperature|Degrees Celcius|
+Battery Time Remaining|Minutes|`-1` when the battery is not discharging
+DC Load|Watts|
+Remaining Charge Time|Minutes|`-1` when the battery is not charging up
+Solar/DC Draw|Watts|
+State of Charge|Percentage|
+System Temperature|Degrees Celcius|
+Total Draw|Watts|
+Total Load|Watts|
+USB-A Load|Watts|
+USB-C Load|Watts|
 
 ### Command Line Examples
 In linux, using serial + HID comms, output formatted for humans:
